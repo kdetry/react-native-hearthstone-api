@@ -1,5 +1,5 @@
 # react-native-hearthstone-api
-Hearthstone cards by mechanics by React Native and RapidApi
+Hearthstone cards application classified by mechanics by using React Native and RapidApi
 
 ## NOT COMPLETED YET
 Current Status
