@@ -3,6 +3,6 @@ Hearthstone cards by mechanics by React Native and RapidApi
 
 ## NOT COMPLETED YET
 Current Status
-<img src=“https://github.com/kdetry/react-native-hearthstone-api/blob/master/src/assets/images/current.png?raw=true” style="max-width: 500px" />
+<img src="https://github.com/kdetry/react-native-hearthstone-api/blob/master/src/assets/images/current.png?raw=true" style="max-width: 500px" />
 
 
