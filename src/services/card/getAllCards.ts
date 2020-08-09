@@ -1,5 +1,5 @@
 import { CardItem } from 'transferobjects/card/CardItem';
-import { cardsApi, rapidApiHost, rapidApiKey } from 'services';
+import { rapidApiHost, rapidApiKey, cardsApiUrl } from 'services';
 import { MechanicItem } from 'transferobjects/card/MechanicItem';
 
 export type AllCardsResponse = {
@@ -11,7 +11,7 @@ let cardsWithMechanics: Array<CardItem> = [];
 
 export const getAllCards: Function = (): Promise<AllCardsResponse> => {
     return new Promise<AllCardsResponse>((resolve, reject) => {
-        fetch(cardsApi(), {
+        fetch(cardsApiUrl(), {
             headers: {
                 'x-rapidapi-host': rapidApiHost,
                 'x-rapidapi-key': rapidApiKey,
