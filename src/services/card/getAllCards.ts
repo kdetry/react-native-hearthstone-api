@@ -1,10 +1,12 @@
 import { CardItem } from 'transferobjects/card/CardItem';
 import { rapidApiHost, rapidApiKey, cardsApiUrl } from 'services';
 import { MechanicItem } from 'transferobjects/card/MechanicItem';
+import { GeneralError } from 'transferobjects/GeneralError';
+import { generalErrorTitle } from 'screens/appconstants';
 
 export type AllCardsResponse = {
-    data: Array<CardItem>;
-    uniqueMechanics: Array<string>;
+    uniqueMechanics?: Array<string>;
+    error?: GeneralError
 };
 
 let cardsWithMechanics: Array<CardItem> = [];
@@ -27,28 +29,40 @@ export const getAllCards: Function = (): Promise<AllCardsResponse> => {
                 ),
             )
             .then((filteredData: Array<CardItem>) => {
-                let uniqueMechanicsNames: Array<string> = [];
-
                 cardsWithMechanics = filteredData;
-                filteredData.forEach((item: CardItem) => {
-                    item.mechanics.forEach((mechanic: MechanicItem) => {
-                        if (
-                            uniqueMechanicsNames.includes(mechanic.name) ===
-                            false
-                        ) {
-                            uniqueMechanicsNames.push(mechanic.name);
-                        }
-                    });
-                });
+
+                let uniqueMechanicsNames: Array<string> = getUniqueMechanicsFrom(filteredData);
 
                 resolve({
-                    data: filteredData,
                     uniqueMechanics: uniqueMechanicsNames,
                 });
             })
-            .catch((e) => reject(e));
+            .catch((e) => reject({
+                uniqueMechanics: undefined,
+                error: {
+                    title: generalErrorTitle,
+                    body: e.toString()
+                }
+            }));
     });
 };
+
+const getUniqueMechanicsFrom = function(data: Array<CardItem>): Array<string> {
+    let uniqueMechanicsNames: Array<string> = [];
+
+    data.forEach((item: CardItem) => {
+        item.mechanics.forEach((mechanic: MechanicItem) => {
+            if (
+                uniqueMechanicsNames.includes(mechanic.name) ===
+                false
+            ) {
+                uniqueMechanicsNames.push(mechanic.name);
+            }
+        });
+    });
+
+    return uniqueMechanicsNames;
+}
 
 export const getCardsWithMechanics: Function = (): Array<CardItem> => {
     return cardsWithMechanics;

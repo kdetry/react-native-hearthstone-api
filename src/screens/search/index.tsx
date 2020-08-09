@@ -12,7 +12,6 @@ type Props = {};
 
 export default class SearchScreen extends React.PureComponent<Props> {
     requestKey: string = '';
-    __isMounted?: boolean;
     constructor(props: Props) {
         super(props);
     }

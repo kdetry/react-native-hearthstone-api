@@ -11,6 +11,7 @@ import { connect } from 'react-redux';
 import { SearchCardsResponse } from 'services/card/getBySearch';
 import { GeneralError } from 'transferobjects/GeneralError';
 import { homeStyle } from 'screens/home/homeStyle';
+import { ErrorView } from 'screens/common/errorarea';
 
 type Props = {
     isLoading: boolean | undefined;
@@ -32,13 +33,7 @@ class SearchResults extends React.Component<Props> {
             }
         }
     }
-    errorAction(errorInfo: GeneralError): JSX.Element {
-        Alert.alert(
-            errorInfo.title,
-            errorInfo.body,
-        );
-        return <View></View>;
-    }
+    
     render(): JSX.Element {
         if (this.props.isLoading)
             return (
@@ -50,7 +45,7 @@ class SearchResults extends React.Component<Props> {
         if (this.props.result == undefined) return <View></View>;
 
         if (this.props.result.error !== undefined)
-            return this.errorAction(this.props.result.error);
+        return <ErrorView errorInfo={this.props.result.error} />;
 
         return (
             <FlatList

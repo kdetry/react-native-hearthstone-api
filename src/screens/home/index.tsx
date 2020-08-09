@@ -12,6 +12,8 @@ import { Navigation } from 'react-native-navigation';
 import { MechanicScreenKey, SearchButtonId, SearchScreenKey } from 'screens/navigationkeys';
 import { AppColors } from 'screens/appconstants';
 import { generateTopbarProperty } from 'services/common/generateTopbarProperty';
+import { GeneralError } from 'transferobjects/GeneralError';
+import { ErrorView } from 'screens/common/errorarea';
 
 type Props = {
     componentId: string;
@@ -19,9 +21,12 @@ type Props = {
 
 type State = {
     mechanicNames?: Array<string>;
+    error?: GeneralError
 };
 
 export default class HomeScreen extends React.Component<Props, State> {
+
+    __isMounted?: boolean;
     constructor(props: any) {
         super(props);
         this.state = {
@@ -44,13 +49,27 @@ export default class HomeScreen extends React.Component<Props, State> {
     }
 
     componentDidMount(): void {
-        getAllCards().then((result: AllCardsResponse) => {
+        this.__isMounted = true;
+
+        getAllCards()
+        .then((result: AllCardsResponse) => {
+            if(!this.__isMounted)
+                return;
+            
             this.setState({
                 mechanicNames: result.uniqueMechanics,
             });
+        })
+        .catch((result: AllCardsResponse) => {
+            this.setState({
+                error: result.error
+            })
         });
     }
 
+    componentWillUnmount(): void {
+        this.__isMounted = false;
+    }
     navigationButtonPressed(eventParameters: { buttonId: string }) {
         if(eventParameters.buttonId === SearchButtonId){
             Navigation.push(this.props.componentId, {
@@ -62,6 +81,9 @@ export default class HomeScreen extends React.Component<Props, State> {
     }
 
     render(): JSX.Element {
+        if (this.state.error !== undefined)
+            return <ErrorView errorInfo={this.state.error} />;
+
         if (this.state.mechanicNames === undefined) {
             return (
                 <SafeAreaView style={homeStyle.loadingSafearea}>
